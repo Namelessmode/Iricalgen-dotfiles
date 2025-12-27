@@ -1,0 +1,34 @@
+@import "config.rasi" 
+
+
+configuration {
+  modi: "drun";
+}
+
+
+window {
+  width: 70%;
+  height: 45%;
+}
+
+listview {
+  columns: 1;
+  lines: 4;
+  spacing: 8px;
+  padding: 20px;
+  fixed-width: true;
+  fixed-height: true;
+  cycle: true;
+  border-radius: 10px;
+}
+
+element-icon {
+  size: 0%;
+}
+
+element-text {
+  horizontal-align: 0.0;
+  vertical-allign: 0.5;
+  margin: 2px;
+  padding: 2px;
+}

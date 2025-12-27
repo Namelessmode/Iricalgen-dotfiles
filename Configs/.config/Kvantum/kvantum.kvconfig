@@ -1,0 +1,5 @@
+[General]
+theme=ivy
+
+[Applications]
+ivy=dolphin

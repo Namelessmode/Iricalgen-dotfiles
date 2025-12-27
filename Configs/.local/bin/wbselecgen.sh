@@ -1,0 +1,131 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+# ────────────────────────────────────────────────
+# Configuration
+scrDir=$(dirname "$(realpath "$0")")
+source "$scrDir/globalvariable.sh"
+
+WALL_DIR="${confDir}/../Pictures/wallpapers"
+CACHE_DIR="${cacheDir}/ivy-shell/cache"
+mkdir -p "$CACHE_DIR"
+BLURRED_DIR="${cacheDir}/ivy-shell/blurred"
+mkdir -p "$BLURRED_DIR"
+ROFI_THEME="${rasiDir}/config-wallpaper.rasi"
+xtrans="any"
+wallFramerate="60"
+wallTransDuration="1"
+BLUR_DEFAULT="50x30"
+BLUR="$BLUR_DEFAULT"
+
+# ────────────────────────────────────────────────
+# Logging helper
+log() { echo "[walsec] $1"; }
+
+# ────────────────────────────────────────────────
+# Apply wallpaper + blur + cache + color sync
+apply_wallpaper() {
+    local img="$1"
+    if [ -z "$img" ] || [ ! -f "$img" ]; then
+        notify-send "Invalid wallpaper" "File not found: $img"
+        exit 1
+    fi
+
+    local base="$(basename "$img")"
+    local cached_img="$CACHE_DIR/$base"
+
+    case "$img" in
+        *.gif)
+            # Keep GIF, copy to cache for swww
+            if [ ! -f "$cached_img" ]; then
+                cp "$img" "$cached_img"
+            fi
+            img="$cached_img"
+            ;;
+        *)
+            # Non-GIF, copy to cache if missing
+            [ ! -f "$cached_img" ] && cp "$img" "$cached_img"
+            img="$cached_img"
+            ;;
+    esac
+
+    local blurred="$BLURRED_DIR/blurred-${base%.*}.png"
+    local rasifile="$BLURRED_DIR/current_wallpaper.rasi"
+
+    # Apply wallpaper with transition (swww supports GIFs)
+    log "Applying wallpaper: $img"
+        autoD=(
+            "$localDir/bin/ivy-shell.sh \"$img\""
+            "matugen image \"$img\""
+        )
+    export img
+    export HOME
+    export localDir
+    parallel ::: "${autoD[@]}" 
+    swww img "$img" -t any --transition-bezier .43,1.19,1,.4 --transition-duration $wallTransDuration --transition-fps $wallFramerate --invert-y &
+    wait
+    # Generate blurred wallpaper (first frame if GIF)
+    if [ ! -f "$blurred" ]; then
+        log "Creating blurred wallpaper..."
+        if [[ "$img" == *.gif ]]; then
+            magick "$img[0]" -resize 75% "$blurred"
+        else
+            magick "$img" -resize 75% "$blurred"
+        fi
+        [ "$BLUR" != "0x0" ] && magick "$blurred" -blur "$BLUR" "$blurred"
+    fi
+
+    # Generate Rofi .rasi file for background blur
+    echo "* { current-image: url(\"$blurred\", height); }" > "$rasifile" &
+   
+    # Symlink Wallpaper to wlogout and Rofi
+    ln -sf "$blurred" "${confDir}/wlogout/wallpaper_blurred.png" &
+    ln -sf "$img" "${confDir}/rofi/shared/current-wallpaper.png" &
+
+        local notif_file="/tmp/.wallbash_notif_id"
+    local notif_id=""
+    [[ -f "$notif_file" ]] && notif_id=$(<"$notif_file")
+
+    if [[ -n "$notif_id" ]]; then
+        notify-send -r "$notif_id" "Wallpaper Theme applied" -i "$img"
+    else
+        # First time: capture ID and write file
+        notif_id=$(notify-send "Wallpaper Theme applied" -i "$img" -p)
+        echo "$notif_id" > "$notif_file"
+    fi &
+}
+
+# ────────────────────────────────────────────────
+# Interactive wallpaper picker
+choose_wallpaper() {
+    mapfile -d '' files < <(find "$WALL_DIR" -type f \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.webp" -o -iname "*.gif" \) -print0)
+
+    menu() {
+        for f in "${files[@]}"; do
+            name=$(basename "$f")
+            thumb="$CACHE_DIR/thumb-${name%.*}.png"
+
+            if [ ! -f "$thumb" ]; then
+                case "$f" in
+                    *.gif) magick "$f[0]" -resize 400x225 "$thumb" ;;  # first frame
+                    *)     magick "$f" -resize 400x225 "$thumb" ;;
+                esac
+            fi
+
+            printf "%s\x00icon\x1f%s\n" "$name" "$thumb"
+        done
+    }
+
+    choice=$(menu | rofi -dmenu -i -p "Wallpaper" -config "$ROFI_THEME" -theme-str 'element-icon{size:33%;}')
+    [ -z "$choice" ] && exit 0
+    apply_wallpaper "$WALL_DIR/$choice"
+}
+
+# ────────────────────────────────────────────────
+# Main
+if [ -n "$1" ]; then
+    apply_wallpaper "$1"
+else
+    choose_wallpaper
+fi
+

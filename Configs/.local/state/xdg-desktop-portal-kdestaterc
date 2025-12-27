@@ -1,0 +1,6 @@
+[FileDialogSize]
+1600x900 screen: Window-Maximized=true
+
+[KFileDialog Settings]
+Recent Files[$e]=file:$HOME/20251215_12h40m08s_grim.png
+Recent URLs[$e]=file:$HOME/
