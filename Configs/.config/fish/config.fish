@@ -4,4 +4,5 @@ if status is-interactive
 
 	alias pamcan pacman
 	alias fastfetch="$HOME/.local/bin/fastfetch.sh"
+	set EDITOR nvim
 end

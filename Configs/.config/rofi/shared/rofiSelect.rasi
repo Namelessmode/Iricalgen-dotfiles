@@ -24,6 +24,7 @@ configuration {
 // Global properties // 
 @import 		    	      "../theme.rasi"
 
+
 // Main //
 window {
     enabled:                     true;

@@ -1,5 +1,5 @@
 function walsec
-    set script "$HOME/.config/hypr/scripts/wbselecgen.sh"
+    set script "$HOME/.local/bin/wbselecgen.sh"
     
     # If no argument, open the wallpaper selector
     if test (count $argv) -eq 0

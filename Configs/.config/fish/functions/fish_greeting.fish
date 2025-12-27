@@ -1,4 +1,3 @@
 function fish_greeting
-  clear
-  fastfetch
+ fastfetch
 end

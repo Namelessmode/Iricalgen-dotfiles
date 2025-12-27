@@ -1,36 +1,18 @@
-# version: 1.0.0
-"$schema" = 'https://starship.rs/config-schema.json'
-
-add_newline = true
-continuation_prompt = "[▸▹ ](dimmed white)"
-
-format = """($nix_shell$container$fill$git_metrics\n)$cmd_duration\
-$hostname\
-$localip\
-$shlvl\
-$shell\
-$env_var\
-$jobs\
-$sudo\
-$username\
-$character"""
-
+# "$schema" = 'https://starship.rs/config-schema.json'
+add_newline = false
+format = """\
+  󰣇 \
+  $directory\
+  $git_branch$git_commit$git_state $git_status\
+  $character\n
+"""
 right_format = """
 $singularity\
 $kubernetes\
-$directory\
 $vcsh\
-$fossil_branch\
-$git_branch\
-$git_commit\
-$git_state\
-$git_status\
 $hg_branch\
 $pijul_channel\
-$docker_context\
-$package\
 $c\
-$cpp\
 $cmake\
 $cobol\
 $daml\
@@ -41,7 +23,6 @@ $elixir\
 $elm\
 $erlang\
 $fennel\
-$fortran\
 $golang\
 $guix_shell\
 $haskell\
@@ -57,7 +38,6 @@ $nodejs\
 $ocaml\
 $opa\
 $perl\
-$php\
 $pulumi\
 $purescript\
 $python\
@@ -72,11 +52,9 @@ $swift\
 $terraform\
 $vlang\
 $vagrant\
-$xmake\
 $zig\
 $buf\
 $conda\
-$pixi\
 $meson\
 $spack\
 $memory_usage\
@@ -84,245 +62,344 @@ $aws\
 $gcloud\
 $openstack\
 $azure\
+$cpp\
+$kotlin\
+$ocaml\
+$pixi\
+$rlang\
+$php\
 $crystal\
 $custom\
 $status\
 $os\
-$battery\
 $time"""
 
-[fill]
-symbol = ' '
+continuation_prompt = '▶▶ '
 
-[character]
-format = "$symbol "
-success_symbol = "[◎](bold italic bright-yellow)"
-error_symbol = "[○](italic purple)"
-vimcmd_symbol = "[■](italic dimmed green)"
-# not supported in zsh
-vimcmd_replace_one_symbol = "◌"
-vimcmd_replace_symbol = "□"
-vimcmd_visual_symbol = "▼"
 
-[env_var.VIMSHELL]
-format = "[$env_value]($style)"
-style = 'green italic'
+# style_choices:
+# bold
+# italic
+# underline
+# dimmed
+# inverted
+# blink
+# hidden
+# strikethrough
+# bg:<color>
+# fg:<color>
+# <color>
+# none
 
-[sudo]
-format = "[$symbol]($style)"
-style = "bold italic bright-purple"
-symbol = "⋈┈"
-disabled = false
-
-[username]
-style_user = "bright-yellow bold italic"
-style_root = "purple bold italic"
-format = "[⭘ $user]($style) "
-disabled = false
-show_always = false
+#NOTE: you can customize the symbols, e.g:
+# [character]
+# success_symbol = "[  ]($bold fg:#f8f8f2)"
+# error_symbol = "[ ➤ ]($bold fg:#fb4934)"
 
 [directory]
-home_symbol = "⌂"
-truncation_length = 2
-truncation_symbol = "□ "
-read_only = " ◈"
-use_os_path_sep = true
-style = "italic blue"
-format = '[$path]($style)[$read_only]($read_only_style)'
-repo_root_style = 'bold blue'
-repo_root_format = '[$before_root_path]($before_repo_root_style)[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) [△](bold bright-blue)'
-
-[cmd_duration]
-format = "[◄ $duration ](italic white)"
-
-[jobs]
-format = "[$symbol$number]($style) "
-style = "white"
-symbol = "[▶](blue italic)"
-
-[localip]
-ssh_only = true
-format = " ◯[$localipv4](bold magenta)"
 disabled = false
+format = "[$path](bold fg:#8be9fd)"
+truncate_to_repo = false
+# home_symbol = "" 
+
+[git_branch]
+format = " [  $branch](fg:#9198a1)"
+
+[git_status]
+ahead = '⇡${count}'
+behind = '⇣${count}'
+diverged = '⇕⇡${ahead_count}⇣${behind_count}'
+format = '[[( $all_status$ahead_behind )](fg:#769ff0)]($style)'
+style = "bg:#394260"
+
 
 [time]
 disabled = false
-format = "[ $time]($style)"
-time_format = "%R"
-utc_time_offset = "local"
-style = "italic dimmed white"
-
-[battery]
-format = "[ $percentage $symbol]($style)"
-full_symbol = "█"
-charging_symbol = "[↑](italic bold green)"
-discharging_symbol = "↓"
-unknown_symbol = "░"
-empty_symbol = "▃"
-
-[[battery.display]]
-threshold = 20
-style = "italic bold red"
-
-[[battery.display]]
-threshold = 60
-style = "italic dimmed bright-purple"
-
-[[battery.display]]
-threshold = 70
-style = "italic dimmed yellow"
-
-[git_branch]
-format = " [$branch(:$remote_branch)]($style)"
-symbol = "[△](bold italic bright-blue)"
-style = "italic bright-blue"
-truncation_symbol = "⋯"
-truncation_length = 11
-ignore_branches = ["main", "master"]
-only_attached = true
-
-[git_metrics]
-format = '([▴$added]($added_style))([▿$deleted]($deleted_style))'
-added_style = 'italic dimmed green'
-deleted_style = 'italic dimmed red'
-ignore_submodules = true
-disabled = false
-
-[git_status]
-style = "bold italic bright-blue"
-format = "([⎪$ahead_behind$staged$modified$untracked$renamed$deleted$conflicted$stashed⎥]($style))"
-conflicted = "[◪◦](italic bright-magenta)"
-ahead = "[▴│[${count}](bold white)│](italic green)"
-behind = "[▿│[${count}](bold white)│](italic red)"
-diverged = "[◇ ▴┤[${ahead_count}](regular white)│▿┤[${behind_count}](regular white)│](italic bright-magenta)"
-untracked = "[◌◦](italic bright-yellow)"
-stashed = "[◃◈](italic white)"
-modified = "[●◦](italic yellow)"
-staged = "[▪┤[$count](bold white)│](italic bright-cyan)"
-renamed = "[◎◦](italic bright-blue)"
-deleted = "[✕](italic red)"
+format = '[[  $time ](fg:#a0a9cb )]($style)'
+time_format = "%R"                            # Hour:Minute Format
 
 [deno]
-format = " [deno](italic) [∫ $version](green bold)"
+format = " [deno](italic) [ ](green bold)"
 version_format = "${raw}"
 
 [lua]
-format = " [lua](italic) [${symbol}${version}]($style)"
-version_format = "${raw}"
-symbol = "⨀ "
+format = " [lua](italic) [${symbol}]($style)"
 style = "bold bright-yellow"
+symbol = "⨀ "
+version_format = "${raw}"
 
 [nodejs]
-format = " [node](italic) [◫ ($version)](bold bright-green)"
-version_format = "${raw}"
+detect_extensions = []
 detect_files = ["package-lock.json", "yarn.lock"]
 detect_folders = ["node_modules"]
-detect_extensions = []
+format = "[ ](bold bright-green)"
+version_format = "${raw}"
 
 [python]
-format = " [py](italic) [${symbol}${version}]($style)"
-symbol = "[⌉](bold bright-blue)⌊ "
-version_format = "${raw}"
+format = "[${symbol}(${virtualenv}) ${version}]($style)"
 style = "bold bright-yellow"
+symbol = "[ ](bold bright-blue)"
+version_format = "${raw}"
 
 [ruby]
-format = " [rb](italic) [${symbol}${version}]($style)"
-symbol = "◆ "
-version_format = "${raw}"
+format = " [rb](italic) [${symbol}]($style)"
 style = "bold red"
+symbol = " "
+version_format = "${raw}"
 
 [rust]
-format = " [rs](italic) [$symbol$version]($style)"
-symbol = "⊃ "
-version_format = "${raw}"
-style = "bold red"
-
-[package]
-format = " [pkg](italic dimmed) [$symbol$version]($style)"
-version_format = "${raw}"
-symbol = "◨ "
-style = "dimmed yellow italic bold"
+style = "bold bright-red"
+format = " rs(italic) $symbol($style)"
+symbol = " "
 
 [swift]
-format = " [sw](italic) [${symbol}${version}]($style)"
-symbol = "◁ "
+format = " [sw](italic) [${symbol}]($style)"
 style = "bold bright-red"
+symbol = " "
 version_format = "${raw}"
 
 [aws]
 disabled = true
 format = " [aws](italic) [$symbol $profile $region]($style)"
 style = "bold blue"
-symbol = "▲ "
+symbol = " "
 
 [buf]
+style = "bold bright-red"
+format = " [buf](italic) [$symbol $buf_version]($style)"
 symbol = "■ "
-format = " [buf](italic) [$symbol $version $buf_version]($style)"
 
 [c]
+style = "bold bright-cyan"
+format = " [$symbol(-$name)]($style)"
 symbol = "ℂ "
-format = " [$symbol($version(-$name))]($style)"
 
 [cpp]
-symbol = "ℂ "
-format = " [$symbol($version(-$name))]($style)"
+style = "bold bright-cyan"
+format = " [cpp](italic) [$symbol]($style)"
+symbol = " "
 
-[conda]
-symbol = "◯ "
-format = " conda [$symbol$environment]($style)"
+[kotlin]
+format = " [kotlin](italic) [$symbol]($style)"
+style = "bold bright-red"
+symbol = " "
+
+[ocaml]
+format = " [ocaml](italic) [$symbol]($style)"
+style = "bold bright-yellow"
+symbol = " "
+
+[perl]
+format = " [perl](italic) [$symbol]($style)"
+style = "bold bright-cyan"
+symbol = " "
+
+[php]
+format = " [php](italic) [$symbol]($style)"
+style = "bold bright-red"
+symbol = " "
 
 [pixi]
-symbol = "■ "
-format = " pixi [$symbol$version ($environment )]($style)"
+format = " [pixi](italic) [$symbol]($style)"
+style = "bold bright-yellow"
+symbol = "pixi "
+
+[rlang]
+format = " [rlang](italic) [$symbol]($style)"
+style = "bold bright-cyan"
+symbol = " "
+
+[meson]
+format = " [meson](italic) [$symbol]($style)"
+style = "bold bright-red"
+symbol = "meson "
+
+[conda]
+style = "bold bright-red"
+format = " conda [$symbol$environment]($style)"
+symbol = "◯ "
 
 [dart]
-symbol = "◁◅ "
-format = " dart [$symbol($version )]($style)"
+style = "bold bright-cyan"
+format = " dart [$symbol]($style)"
+symbol = " "
 
-[docker_context]
-symbol = "◧ "
-format = " docker [$symbol$context]($style)"
 
 [elixir]
-symbol = "△ "
-format = " exs [$symbol $version OTP $otp_version ]($style)"
+style = "bold bright-yellow"
+format = " exs [$symbol OTP $otp_version ]($style)"
+symbol = " "
 
 [elm]
+style = "bold bright-red"
+format = " elm [$symbol]($style)"
 symbol = "◩ "
-format = " elm [$symbol($version )]($style)"
 
 [golang]
+style = "bold bright-blue"
+format = " go [$symbol]($style)"
 symbol = "∩ "
-format = " go [$symbol($version )]($style)"
 
 [haskell]
+style = "bold bright-yellow"
+format = " hs [$symbol]($style)"
 symbol = "❯λ "
-format = " hs [$symbol($version )]($style)"
 
 [java]
-symbol = "∪ "
-format = " java [${symbol}(${version} )]($style)"
+style = "bold bright-red"
+format = " java [${symbol}]($style)"
+symbol = " "
 
 [julia]
+style = "bold bright-cyan"
+format = " jl [$symbol]($style)"
 symbol = "◎ "
-format = " jl [$symbol($version )]($style)"
 
 [memory_usage]
-symbol = "▪▫▪ "
+style = "bold bright-cyan"
 format = " mem [${ram}( ${swap})]($style)"
+symbol = "▪▫▪ "
 
 [nim]
+style = "bold bright-yellow"
+format = " nim [$symbol]($style)"
 symbol = "▴▲▴ "
-format = " nim [$symbol($version )]($style)"
 
 [nix_shell]
-style = 'bold italic dimmed blue'
-symbol = '✶'
 format = '[$symbol nix⎪$state⎪]($style) [$name](italic dimmed white)'
 impure_msg = '[⌽](bold dimmed red)'
 pure_msg = '[⌾](bold dimmed green)'
-unknown_msg = '[◌](bold dimmed yellow)'
+style = 'bold italic dimmed blue'
+symbol = ' '
+unknown_msg = '[◌](bold dimmed ellow)'
 
 [spack]
-symbol = "◇ "
+style = "bold bright-yellow"
 format = " spack [$symbol$environment]($style)"
+symbol = "◇ "
+
+
+[zig]
+style = "bold bright-yellow"
+format = " zig [$symbol]($style)"
+symbol = " "
+
+
+[scala]
+format = " scala [$symbol]($style)"
+symbol = " "
+
+[singularity]
+style = "bold bright-yellow"
+format = " [singularity](italic) [$symbol]($style)"
+symbol = "singularity "
+
+[kubernetes]
+style = "bold bright-cyan"
+format = " [kubernetes](italic) [$symbol]($style)"
+symbol = " "
+
+[vcsh]
+style = "bold bright-red"
+format = " [vcsh](italic) [$symbol]($style)"
+symbol = "vcsh "
+
+[cobol]
+style = "bold bright-yellow"
+format = " [cobol](italic) [$symbol]($style)"
+symbol = "cobol "
+
+[daml]
+style = "bold bright-cyan"
+format = " [daml](italic) [$symbol]($style)"
+symbol = "daml "
+
+[dotnet]
+style = "bold bright-red"
+format = " [dotnet](italic) [$symbol]($style)"
+symbol = ".NET "
+
+[erlang]
+style = "bold bright-yellow"
+format = " [erlang](italic) [$symbol]($style)"
+symbol = " "
+
+[fennel]
+style = "bold bright-cyan"
+format = " [fennel](italic) [$symbol]($style)"
+symbol = " "
+
+[haxe]
+style = "bold bright-red"
+format = " [haxe](italic) [$symbol]($style)"
+symbol = " "
+
+[helm]
+style = "bold bright-yellow"
+format = " [helm](italic) [$symbol]($style)"
+symbol = "helm "
+
+[opa]
+style = "bold bright-cyan"
+format = " [opa](italic) [$symbol]($style)"
+symbol = "opa "
+
+[pulumi]
+format = " [pulumi](italic) [$symbol]($style)"
+style = "bold bright-red"
+symbol = "pulumi "
+
+[purescript]
+style = "bold bright-yellow"
+format = " [purescript](italic) [$symbol]($style)"
+symbol = " "
+
+[raku]
+style = "bold bright-cyan"
+format = " [raku](italic) [$symbol]($style)"
+symbol = "raku "
+
+[red]
+style = "bold bright-red"
+format = " [red](italic) [$symbol]($style)"
+symbol = "red "
+
+[solidity]
+style = "bold bright-yellow"
+format = " [solidity](italic) [$symbol]($style)"
+symbol = " "
+
+[terraform]
+style = "bold bright-cyan"
+format = " [terraform](italic) [$symbol]($style)"
+symbol = "terraform "
+
+[vlang]
+format = " [vlang](italic) [$symbol]($style)"
+style = "bold bright-red"
+symbol = "vlang "
+
+[vagrant]
+format = " [vagrant](italic) [$symbol]($style)"
+style = "bold bright-yellow"
+symbol = "vagrant "
+
+[gcloud]
+format = " [gcloud](italic) [$symbol]($style)"
+style = "bold bright-cyan"
+symbol = "gcloud "
+
+[openstack]
+format = " [openstack](italic) [$symbol]($style)"
+style = "bold bright-red"
+symbol = "openstack "
+
+[azure]
+format = " [azure](italic) [$symbol]($style)"
+style = "bold bright-yellow"
+symbol = " "
+
+[crystal]
+format = " [crystal](italic) [$symbol]($style)"
+style = "bold bright-cyan"
+symbol = " "

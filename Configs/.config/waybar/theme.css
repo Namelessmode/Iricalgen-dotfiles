@@ -3,31 +3,31 @@
 /* // ------------------------------------- */
 
 @define-color foreground             #FFFFFF;
-@define-color background             #182325;
-@define-color cursor                 #A0B5BB;
+@define-color background             #1A1C23;
+@define-color cursor                 #E6DBD8;
 
-@define-color color0                 #182325;
-@define-color color8                 #294B52;
+@define-color color0                 #1A1C23;
+@define-color color8                 #293252;
 
-@define-color color1                 #39494C;
-@define-color color9                 #294B52;
+@define-color color1                 #464650;
+@define-color color9                 #292952;
 
-@define-color color2                 #637578;
-@define-color color10                #294C52;
+@define-color color2                 #7A7A89;
+@define-color color10                #292952;
 
-@define-color color3                 #A0B5BB;
-@define-color color11                #294952;
+@define-color color3                 #E6DBD8;
+@define-color color11                #523229;
 
-@define-color color4                 #659AA3;
-@define-color color12                #7AB7C2;
+@define-color color4                 #6573A3;
+@define-color color12                #7A8AC2;
 
-@define-color color5                 #6599A3;
-@define-color color13                #9ADAE6;
+@define-color color5                 #6565A3;
+@define-color color13                #9A9AE6;
 
-@define-color color6                 #659AA3;
-@define-color color14                #9ADBE6;
+@define-color color6                 #6565A3;
+@define-color color14                #9A9AE6;
 
-@define-color color7                 #6595A3;
+@define-color color7                 #A37265;
 @define-color color15                #FFFFFF;
 
 /* // ------------------------------------- */
