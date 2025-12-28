@@ -51,8 +51,6 @@ apply_wallpaper() {
 
     local blurred="$BLURRED_DIR/blurred-${base%.*}.png"
     local rasifile="$BLURRED_DIR/current_wallpaper.rasi"
-
-    # Apply wallpaper with transition (swww supports GIFs)
     log "Applying wallpaper: $img"
         autoD=(
             "$localDir/bin/ivy-shell.sh \"$img\""
@@ -64,7 +62,7 @@ apply_wallpaper() {
     parallel ::: "${autoD[@]}" 
     swww img "$img" -t any --transition-bezier .43,1.19,1,.4 --transition-duration $wallTransDuration --transition-fps $wallFramerate --invert-y &
     wait
-    # Generate blurred wallpaper (first frame if GIF)
+
     if [ ! -f "$blurred" ]; then
         log "Creating blurred wallpaper..."
         if [[ "$img" == *.gif ]]; then
@@ -74,11 +72,9 @@ apply_wallpaper() {
         fi
         [ "$BLUR" != "0x0" ] && magick "$blurred" -blur "$BLUR" "$blurred"
     fi
-
-    # Generate Rofi .rasi file for background blur
     echo "* { current-image: url(\"$blurred\", height); }" > "$rasifile" &
     magick "$blurred" "${confDir}/wlogout/wallpaper_blurred.png" &
-    magick "$img" "${confDir}/rofi/shared/current-wallpaper.png" &
+    cp "$img" "${confDir}/rofi/shared/current-wallpaper.png" &
 
         local notif_file="/tmp/.wallbash_notif_id"
     local notif_id=""
@@ -87,7 +83,6 @@ apply_wallpaper() {
     if [[ -n "$notif_id" ]]; then
         notify-send -r "$notif_id" "Wallpaper Theme applied" -i "$img"
     else
-        # First time: capture ID and write file
         notif_id=$(notify-send "Wallpaper Theme applied" -i "$img" -p)
         echo "$notif_id" > "$notif_file"
     fi &
