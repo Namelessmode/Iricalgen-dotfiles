@@ -66,7 +66,6 @@ llvm
 btop
 inotify-tools
 jq
-matugen
 cpio
 file-roller
 ncdu
