@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
 scrDir=$(dirname "$(realpath "$0")")
 source "$scrDir/globalvariable.sh"
 
@@ -9,7 +11,7 @@ if ! pgrep -x "swww-daemon" >/dev/null; then
 fi
 
 if [[ ! -f "$flag" ]]; then
-  default="$HOME/Pictures/wallpapers/1_rain_world.png"
+  default="$HOME/Pictures/wallpapers/1 rain_world.png"
   $scrDir/wbselecgen.sh "$default"
   touch "$flag"
 fi

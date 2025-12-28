@@ -31,7 +31,7 @@ trough slider {
 }
 
 trough {
-  background-color: #24283B;
+  background-color: #272E3C;
 }
 
 /* notifications */
@@ -39,7 +39,7 @@ trough {
   border-radius: 12px;
   border: 1px solid #CCCCFF;
   margin: 8px;
-  background: #16161F;
+  background: #1B1B29;
   color: #FFFFFF;
   padding: 0;
 }
@@ -77,17 +77,17 @@ trough {
 .notification-background .close-button {
   margin: 7px;
   padding: 2px;
-  color: #24283B;
-  background-color: rgba(22,22,31,0);
+  color: #272E3C;
+  background-color: rgba(27,27,41,0);
   box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.35);
 }
 
 .notification-background .close-button:hover {
-  background-color: rgba(22,22,31,0.8);
+  background-color: rgba(27,27,41,0.8);
 }
 
 .notification-background .close-button:active {
-  background-color: rgba(22,22,31,0);
+  background-color: rgba(27,27,41,0);
 }
 
 .notification .notification-action {
@@ -97,15 +97,15 @@ trough {
 }
 
 .notification .notification-action {
-  background-color: #24283B;
+  background-color: #272E3C;
 }
 
 .notification .notification-action:hover {
-  background-color: #414868;
+  background-color: #2D4E5C;
 }
 
 .notification .notification-action:active {
-  background-color: #98A4CE;
+  background-color: #974C4E;
 }
 
 .notification.critical progress {
@@ -130,14 +130,14 @@ trough {
   border-radius: 10px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.65);
   border: 1px solid #CCCCFF;
-  background-color: #16161F;
+  background-color: #1B1B29;
   color: #FFFFFF;
   padding: 14px;
 }
 
 .control-center .notification-background {
   border-radius: 15px
-  box-shadow: inset 0 0 0 1px #24283B;
+  box-shadow: inset 0 0 0 1px #272E3C;
   margin: 4px 10px;
 }
 
@@ -158,17 +158,17 @@ trough {
 .control-center .widget-title button {
   border-radius: 0px
   color: #FFFFFF;
-  background-color: #24283B;
-  box-shadow: inset 0 0 0 1px #24283B;
+  background-color: #272E3C;
+  box-shadow: inset 0 0 0 1px #272E3C;
   padding: 8px;
 }
 
 .control-center .widget-title button:hover {
-  background-color: #24283B;
+  background-color: #272E3C;
 }
 
 .control-center .widget-title button:active {
-  background-color: #24283B;
+  background-color: #272E3C;
 }
 
 .control-center .notification-group {
@@ -177,7 +177,7 @@ trough {
 }
 
 .control-center .notification-group:focus .notification-background {
-  background-color: #24283B;
+  background-color: #272E3C;
 }
 
 scrollbar slider {
@@ -199,8 +199,8 @@ scrollbar trough {
 .widget-dnd > switch {
   font-size: initial;
   border-radius: 8px;
-  background: #24283B;
-  box-shadow: inset 0 0 0 1px #24283B;
+  background: #272E3C;
+  box-shadow: inset 0 0 0 1px #272E3C;
 }
 
 .widget-dnd > switch:checked {
@@ -208,14 +208,14 @@ scrollbar trough {
 }
 
 .widget-dnd > switch slider {
-  background: #16161F;
+  background: #1B1B29;
   border-radius: 8px;
-  box-shadow: inset 0 0 0 1px #24283B;
+  box-shadow: inset 0 0 0 1px #272E3C;
 }
 
 /* mpris */
 .widget-mpris-player {
-  background-color: #24283B;
+  background-color: #272E3C;
   border-radius: 12px;
   color: #FFFFFF;
   padding: 16px;
@@ -224,7 +224,7 @@ scrollbar trough {
 }
 
 .mpris-overlay {
-  background-color: #24283B;
+  background-color: #272E3C;
   opacity: 0.9;
   padding: 15px 10px;
 }
@@ -260,11 +260,11 @@ scrollbar trough {
 }
 
 .widget-mpris button:hover {
-  background-color: alpha(#24283B, 0.6);
+  background-color: alpha(#272E3C, 0.6);
 }
 
 .widget-mpris button:active {
-  background-color: #24283B;
+  background-color: #272E3C;
 }
 
 .widget-mpris button:disabled {
@@ -283,7 +283,7 @@ scrollbar trough {
 .power-buttons button:hover,
 .powermode-buttons button:hover,
 .screenshot-buttons button:hover {
-  background: #24283B;
+  background: #272E3C;
 }
 
 .control-center .widget-label > label {
@@ -299,8 +299,8 @@ scrollbar trough {
 
 .widget-buttons-grid > flowbox > flowboxchild > button label {
   font-size: 2.5rem;
-  background: #16161F;
-  box-shadow: 0px 0px 10px alpha(#16161F, 0.8);
+  background: #1B1B29;
+  box-shadow: 0px 0px 10px alpha(#1B1B29, 0.8);
   border-radius: 12px;
   min-width: 60px;
   min-height: 30px;
@@ -361,6 +361,6 @@ scrollbar trough {
 .notification-row .notification-background .notification .notification-default-action .notification-content .body-image {
   /* The "extra" optional bottom notification image */
   margin-top: 4px;
-  background-color: #24283B;
+  background-color: #272E3C;
   -gtk-icon-filter: none;
 }
