@@ -1,4 +1,4 @@
-$(confDir)/../.vscode-oss/extensions/thehydeproject.wallbash-0.3.6/themes/wallbash.json
+$(homDir)/.vscode-oss/extensions/thehydeproject.wallbash-0.3.6/themes/wallbash.json
 {
   "colors": {
     "focusBorder": "#<ivy_1xa1>",
