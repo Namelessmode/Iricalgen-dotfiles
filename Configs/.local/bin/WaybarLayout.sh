@@ -10,7 +10,7 @@ wcDir="${wcDir}/config"
 rasiTarget="${rasiDir}/config-waybar.rasi"
 
 apply_config() {
-    ln -sf "$wlDir/$1" "$wcDir"
+    cp -r "$wlDir/$1" "$wcDir"
     "${hyprscrDir}/toggle-waybar.sh" &
 }
 
