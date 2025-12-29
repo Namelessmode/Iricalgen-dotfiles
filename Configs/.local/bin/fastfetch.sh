@@ -42,13 +42,12 @@ Logo options:
 Display options:
   -s, --structure <structure>                Set the structure of the fetch
 EOF
-  else
-    exec fastfetch --help $pill2
-  fi
-    ;;
-  --show-full-help|-sfh|--sfh)
-    exec fastfetch --help $pill2
-    ;;
+    else
+      if [ $pill2 = "show-full"  ]; then
+        exec fastfetch --help 
+      fi
+    fi
+  ;;
   --v|-v|--version)
     exec fastfetch -v
     ;;
