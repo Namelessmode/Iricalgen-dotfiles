@@ -1,4 +1,4 @@
-$(confDir)/swaync/style.css|$RUN:swaync-client -rs &>/dev/null
+$(confDir)/swaync/style.css|$RUN:swaync-client -rs >/dev/null 2>&1 &
 * {
   all: unset;
   transition: 200ms;
