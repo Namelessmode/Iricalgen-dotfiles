@@ -235,7 +235,7 @@ if [[ -d $configDir ]]; then
     if [[ -d "${confpath}" ]]; then
       while true; do
         echo " :: ${indentInfo} Found ${indentYellow}$conf${indentOrange} config found in ${confDir}/"
-        prompt_timer 120 "${indentAction} Do you want to replace ${indentBlue}$conf${indentReset} config?"
+        prompt_timer 120 "${indentAction} Do you want to replace ${indentBlue}${conf}${indentReset} config?"
         case "$PROMPT_INPUT" in
           Y|y)
             backupDir=$(get_backup_dirname)
@@ -247,7 +247,7 @@ if [[ -d $configDir ]]; then
             break
             ;;
           N|n)
-            echo -e " :: ${indentNote} - Skipping ${indentYellow}$conf${indentReset}" 2>&1
+            echo -e " :: ${indentNote} - Skipping ${indentYellow}${conf}${indentReset}" 2>&1
             break
             ;;
           *)
@@ -357,9 +357,9 @@ if [[ -d $configDir ]]; then
             echo -e " :: ${indentOk} Some ${indentMagenta}wallpapers${indentReset} copied successfully!"
           else
             echo -e " :: ${indentError} Failed to copy some ${indentYellow}wallpapers${indentReset}"
+          fi
             ${localDir}/color-cache.sh 
             echo -e " :: ${indentOk} ${indentOrange}wallpapers${indentGreen} has been cached by ${localDir}/color-cache.sh"
-          fi
           ;;
       esac
       ;;
