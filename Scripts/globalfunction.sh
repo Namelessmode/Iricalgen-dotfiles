@@ -72,23 +72,6 @@ install_package() {
   done
 }
 
-install_package() {
-  for dir in "$@"; do
-    if cp -r "$pkg" &>/dev/null; then
-      echo -e "${indentAction} $pkg is already installed. Skipping..."
-      continue
-    fi
-
-    (cp -r --noconfirm "$dir") &
-    PID=$!
-    if $ISAUR -Q "$pkg" &>/dev/null; then
-      echo -e "${indentOk} Package $pkg installed successfully!"
-    else
-      echo -e "${indentError} Package $pkg failed"
-    fi
-  done
-}
-
 prompt_timer() {
     set +e
     unset PROMPT_INPUT
