@@ -10,6 +10,7 @@ export cacheDir="${XDG_CACHE_HOME:-${homDir}}/.cache"
 export configDir="${XDG_CONFIGDIR_HOME:-${scrDir}}/../Configs/"
 export localDir="${XDG_LOCAL_DIR:-${homDir}}/.local/bin/"
 export sourceDir="${XDG_SOURCE_DIR:-${scrDir}}/../Source"
+export walDir="${XDG_WALDIR_HOME:-${homDir}}/Pictures/wallpapers"
 
 export aurRp="yay-bin"
 export cachyRp="cachyos-repo.tar.xz"
@@ -26,6 +27,9 @@ export indentWarning="$(tput setaf 1)"
 
 export indentMagenta="$(tput setaf 5)"
 export indentYellow="$(tput setaf 3)"
+export indentOrange="$(tput setaf 214)"
+export indentGreen="$(tput setaf 2)"
+export indentBlue="$(tput setaf 4)"
 
 print_color() {
   printf "%b%sb\n" "$1" "$2" "${indentReset}"
