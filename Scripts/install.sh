@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -u
+set -eo pipefail
 
 scrDir="$(dirname "$(realpath "$0")")"
 if [[ ! "${scrDir}/globalfunction.sh" ]]; then
@@ -22,11 +22,11 @@ if grep -iqE '(ID|ID_LIKE)=.*(arch)' /etc/os-release >/dev/null 2>&1; then
     read -p "$(echo -n "${indentAction} Do you want to install anyway? (y/n): ")" check
     case ${check} in
       y|yes)
-        echo -n "${indentNotice} Proceeding on Arch Linux by user confirmation"
+        echo "${indentNotice} Proceeding on Arch Linux by user confirmation."
         break
         ;;
       n|no|"")
-        echo -n "${indentError} Aborting installation due to user choice. No changes were made."
+        echo "${indentError} Aborting installation due to user choice. No changes were made."
         exit 0
         ;;
       *)
@@ -49,7 +49,7 @@ if [[ -d "${cloneDir}/${aurRp}" ]]; then
           rm -rf "${cloneDir}"
           break
         elif [[ $var = root ]] && [[ $var1 = root ]]; then
-          echo "${indentWarning} The file has root ownership!!!"
+          echo "${indentWarning} The file has ${indentWarning}root${indentWarning} ownership!!! Manual intervention required - ${indentError} Code: 1"
         fi
         ;;
       N|n)
@@ -60,13 +60,13 @@ if [[ -d "${cloneDir}/${aurRp}" ]]; then
               (cd "${cloneDir}/${aurRp}/" && makepkg -si)
               break
             else
-              echo "${indentWarning} !!! Something went wrong in our side..."
+              echo "${indentWarning} !!! Something went ${indentWarning}wrong${indentWarning} in our side..."
               var=$(stat -c '%U' ${cloneDir}/${aurRp})
               var1=$(stat -c '%U' ${cloneDir}/${aurRp}/PKGBUILD)
               if [[ $var = $USER ]] && [[ $var1 = $USER ]]; then
                 echo "${indentAction} Retrying the script"
               elif [[ $var = root ]] && [[ $var1 = root ]]; then
-                echo "${indentInfo} The folder has root ownership. Please retry again later"
+                echo "${indentInfo} The folder has ${indentWarning}root${indentWarning} ownership. Manual intervention required - ${indentError} Code: 1"
               fi
             fi
             ;;
@@ -77,7 +77,7 @@ if [[ -d "${cloneDir}/${aurRp}" ]]; then
               echo -n "${indentAction} Removing..."
               rm -rf "${cloneDir}"
             elif [[ $var = root ]] && [[ $var1 = root ]]; then
-              echo "${indentWarning} The file has root ownership!!!"
+              echo "${indentError} The file has ${indentWarning}root${indentWarning} ownership!!! ${indentError} Code: 1"
             fi
             ;;
           *)
@@ -94,32 +94,53 @@ else
   mkdir -p ${cloneDir}
 fi
 
-if [[ "$check" = "Y" ]] || [[ "$check" = "y" ]]; then
-  echo "
-It is generally recommended for this repository to have cachyos-repository. However, it is completely optional.
-"
-  read -rp "${indentInfo} Would you like to get cachyos-repository? (y/n): " check3
-  check3="${check3,,}"
-  case "$check3" in
-    y|Y)
-      curl "https://mirror.cachyos.org/${cachyRp}" -o "${cloneDir}/${cachyRp}"
-      tar xvf "${cloneDir}/${cachyRp}" -C "${cloneDir}"
-      sudo bash "${cloneDir}/cachyos-repo/cachyos-repo.sh"
-      echo "${indentOk} Repository has been installed successfully."
-      ;;
-    n|N|""|*)
-      echo "${indentOk} Aborting installation due to user preference."
-      ;;
-  esac
-elif [[ -e "${cloneDir}/${cachyRp}" ]] || [[ -d "${cloneDir}/cachyos-repo" ]]; then
-  echo "${indentAction} CachyOS Repository exists..."
-  echo "${indentNotice} Deleting the Repository"
-  rm -rf ${cloneDir}/${cacheRp}
-  rm -rf ${cloneDir}/cachyos-repo
+if [[ "${check}" = "Y" ]] || [[ ${check} = "y" ]]; then
+  if [[ -d "${cloneDir}/cachyos-repo" ]] || [[ -d "${cloneDir}/${cachyRp}" ]]; then
+    prompt_timer 120 "${indentAction} Would you like to delete the repository?"
+    case "$PROMPT_INPUT" in
+      Y|y)
+        echo "${indentNotice} Deleting ${indentGreen}the Repository"
+        rm -rf ${cloneDir}/${cachyRp}
+        rm -rf ${cloneDir}/cachyos-repo
+        ;;
+      N|n|*)
+        read -p "$(echo -ne "${indentNotice} Would you like to rather use the repository? (y/n) ")" rpcheck
+        case "$rpcheck" in
+          y|Y)
+            if [[ -d "${cloneDir}/cachyos-repo" ]]; then
+              sudo bash "${cloneDir}/cachyos-repo/cachyos-repo.sh"
+            elif [[ -d "${cloneDir}/${cachyRp}" ]]; then
+              tar -xvf "${cloneDir}/${cachyRp}" -C "${cloneDir}"
+              sudo bash "${cloneDir}/cachyos-repo/cachyos-repo.sh"
+            fi
+            ;;
+          n|N|""|*)
+            echo "${indentNotice} Deleting {indenGreen}the repository."
+            rm -rf ${cloneDir}/${cachyRp}
+            rm -rf ${cloneDir}/cachyos-repo
+            ;;
+        esac
+        ;;
+    esac
+  else
+    read -p "$(echo "${indentNotice} It is generally recommended for this repository to have cachyos-repository. However, it is completely optional. Would you like to get cachyos-repository? (y/n): ")" check3
+    check3="${check3,,}"
+    case "$check3" in
+      y|Y)
+        curl "https://mirror.cachyos.org/${cachyRp}" -o "${cloneDir}/${cachyRp}"
+        tar xvf "${cloneDir}/${cachyRp}" -C "${cloneDir}"
+        sudo bash "${cloneDir}/cachyos-repo/cachyos-repo.sh"
+        echo -ne "${indentOk} Repository has been ${indentGreen}installed${indentGreen} successfully."
+        ;;
+      n|N|""|*)
+        echo -ne "${indentReset} Aborting installation due to user preference."
+        ;;
+    esac 
+  fi
 fi
 
 if [[ $check = "Y" ]] || [[ $check = "y" ]]; then
-  prompt_timer 120 "${indentNotice} Would you like to install yay?"
+  prompt_timer 120 "${indentAction} Would you like to install yay?"
 
   case "$PROMPT_INPUT" in
     [Yy]*)
@@ -133,20 +154,18 @@ if [[ $check = "Y" ]] || [[ $check = "y" ]]; then
       break
       ;;
     [Nn]*|""|*)
-      echo "${indentOk} Aborting Installation due to user preference. ${aurRp} wasn't installed."
+      echo "${indentReset} Aborting Installation due to user preference. ${aurRp} wasn't ${indentOrange}installed${indentOrange}."
       ;;
   esac
 fi
 
 if [[ $check = "Y" ]] || [[ $check = "y" ]]; then
   if [[ -e "${pkgsRp}" ]]; then
-    var=$(stat -c '%U' ${pkgsRp})
-    var1=$(stat -c '%U' ${pkgsRp})
-    if [[ $var = $USER ]] && [[ $var1 = $USER ]]; then
+    if [[ $(stat -c '%U' ${pkgsRp}) = $USER ]]; then
       ${pkgsRp} --hyprland
-      echo -n "${indentOk} All hyprland packages were installed."
-    elif [[ $var = root ]] && [[ $var = root ]]; then
-      echo "${indentWarning} The shell script has root ownership!!! Exiting..."
+      echo -n "${indentOk} All hyprland packages were ${indentGreen}installed${indentGreen}."
+    elif [[ $(stat -c '%u' ${pkgsRp}) -eq 0 ]]; then
+      echo "${indentError} The shell script has ${indentWarning}root ownership!!! ${indentWarning}Exiting${indentWarning}"
       exit 1
     fi
       prompt_timer 120 "${indentNotice} Would you like to get additional packages?"
@@ -154,7 +173,7 @@ if [[ $check = "Y" ]] || [[ $check = "y" ]]; then
         [Yy]*)
           echo -n "${indentAction} Proeeding installation due to User's request."
           ${pkgsRp} --extra
-          echo -n "${indentOk} All extra packages were installed"
+          echo -n "${indentOk} All extra packages were ${indentGreen}installed${indentGreen}"
           break
           ;;
         [Nn]|*)
@@ -166,57 +185,79 @@ if [[ $check = "Y" ]] || [[ $check = "y" ]]; then
       [Yy]*)
         echo -n "${indentAction} Proceeding installation due to User's request."
         ${pkgsRp} --driver
-        echo -n "${indentAction} All driver packages were installed"
+        echo -n "${indentAction} All driver packages were ${indentGreen}installed${indentGreen}"
         ;;
       [Nn]|*)
-        echo -n "${indentAction} Avorting installation due to User Preferences."
+        echo -n "${indentReset} Avorting installation due to User Preferences."
         ;;
     esac
   else
-    echo "${indentWarning} The Package DOES NOT EXIST!!"
+    echo "${indentWarning} The Package DOES NOT EXIST!! ${indentError}"
   fi
 fi
 
 if [[ -d $configDir ]]; then
-  echo "${indentYellow} Populating ${confDir}"
-  ${scrDir}/dircaller.sh --all ${homDir}/ 
+  if [[ $(stat -c '%U' ${configDir}) = $USER ]]; then
+    echo -n "${indentOk} Populating ${confDir}"
+    ${scrDir}/dircaller.sh --all ${homDir}/ 
+  elif [[ $(stat -c '%u' ${configDir}) -eq 0 ]]; then
+    echo -n "${indentError} The directory is owned by ${indentWarning}root! ${indentWarning}Exiting${indentWarning}!"
+    exit 1
+  fi
   tar -xvf ${sourceDir}/Sweet-cursors.tar.xz ${homDir}/.icons
-  ln -sf /usr/share/themes/adw-gtk3/assets ${confDir}/gtk-4.0/assets
-  ln -sf /usr/share/themes/adw-gtk3/gtk-4.0/gtk-dark.css ${confDir}/gtk-4.0/assets
-  echo "${indentNotice} Switching the shell to fish"
-  chsh -s /usr/bin/env fish
-  echo "${indentOk} Conversion to fish is completed!"
+  if [[ ! -e "${confDir}/gtk-4.0/assets" ]] || [[ ! -e "${confDir}/gtk-4.0/gtk-dark.css" ]] || [[ -L "${confDir}/gtk-4.0/assets" ]] || [[ -L "${confDir}/gtk-4.0/gtk-dark.css" ]]; then
+    ln -sf /usr/share/themes/adw-gtk3/assets "${confDir}/gtk-4.0/assets" 2>&1
+    ln -sf /usr/share/themes/adw-gtk3/gtk-4.0/gtk-dark.css "${confDir}/gtk-4.0/gtk-dark.css" 2>&1
+    echo -ne "${indentOk} Symlink initialized."
+  fi
   
-  dirTarget=$(mkdir -p ${homDir}/Pictures/wallpapers/)
-  prompt_timer 120 "${indentAction} Would you like to pull wallpapers from a repository?"
+  prompt_timer 120 "${indentAction} Would you like to switch to fish?"
+  case $PROMPT_INPUT in
+    Y|y)
+      echo -n "${indentNotice} Switching the shell to fish"
+      chsh -s /usr/bin/env fish
+      echo -n "${indentOk} Conversion to ${indentGreen}fish${indentOrange} is completed!"
+      ;;
+    N|n|*|"")
+      echo -n "${indentReset} Aborting due to user preference. Keeping $(echo "$SHELL") intact."
+      ;;
+  esac
+  prompt_timer 120 "${indentYellow} Would you like to get wallpapers?"
   case "$PROMPT_INPUT" in
     Y|y)
-      echo -n "${indentNotice} Proceeding pulling repository due to User's repository."
-      if [[ -d "${homDir}/Pictures/wallpapers" ]]; then
-        mkdir -p "${homDir}/Pictures/wallpapers"
+      echo -n "${indentAction} Proceeding pulling repository due to User's repository."
+      mkdir -p "${walDir}"
+      if git clone --depth 1 "https://${repRp}" "${walDir}"; then
+        echo "${indentOk} ${indentMagenta}wallpapers${indentReset} cloned successfully!"
+      else
+        echo "${indentError} Failed to clone ${indentYellow}wallpapers${indentReset}"
       fi
-      git clone --depth 1 "https://${repRp}" "${homDir}/Pictures/wallpapers"
       ${localDir}/color-cache.sh
-      echo "${indentOk} Wallpapers Cached"
+      echo -n "${indentOk} ${indentOrange}wallpapers${indentGreen} has been cached by ${localDir}/color-cache.sh"
       ;;
     N|n)
-      prompt_timer 120 "${indentReset} Would you like to pull from another repository? [Drop the full clone link or say --skip to avoid"
+      prompt_timer 120 "${indentAction} Would you like to pull from another repository? [Drop the full clone link or say --skip to avoid"
       case $prompt_input in
         "")
-          echo "${indentError} No Link was given"
+          echo -n "${indentError} No Link was given. ${indentReset}"
           ;;
         *)
-          dirTarget=$(mkdir -p ${homDir}/Pictures/wallpapers/)
-          git clone --depth 1 "$PROMPT_INPUT" "$dirTarget"
+          if git clone --depth 1 "$PROMPT_INPUT" "${walDir}"; then
+            echo "${indentOk} ${indentMagenta}wallpapers${indentReset} cloned successfully"
+          else
+            echo "${indentError} Failed to clone ${indentYellow}wallpapers${indentReset}"
+          fi
           ${localDir}/color-cache.sh
-          echo "${IndentOk} Ivy-Shell has cached all the wallpapers"
+          echo -n "${indentOk} ${indentOrange}wallpapers${indentGreen} has been cached by ${localDir}/color-cache.sh"
           ;;
         --skip)
           echo "${indentOk} Pulling wallpapers from source."
-          cp -r "${sourceDir}/assets/*.png" "${dirTarget}"
-          cp -r "${sourceDir}/assets/*.jpg" "${dirTarget}"
+          if cp -r ${sourceDir}/assets/*.png "${walDir}" 2>/dev/null || cp -r ${sourceDir}/assets/*.jpg "${walDir}" 2>/dev/null; then
+            echo "${indentOk} Some ${indentMagenta}wallpapers${indentReset} copied successfully!"
+          else
+            echo "${indentError} Failed to copy some ${indentYellow}wallpapers${indentReset}"
           ${localDir}/color-cache.sh
-          echo "${IndentOk} Ivy-Shell has cached all the wallpapers"
+          echo -n "${indentOk} ${indentOrange}wallpapers${indentGreen} has been cached by ${localDir}/color-cache.sh"
           ;;
       esac
       ;;
@@ -224,12 +265,4 @@ if [[ -d $configDir ]]; then
 fi
 
 reboot
-
-
-  
-
-
-
-
-
 
