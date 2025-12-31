@@ -367,4 +367,5 @@ if [[ -d $configDir ]]; then
         ;;
     esac
   done
+  xdg-user-dirs-update 2>&1
 fi
