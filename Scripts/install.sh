@@ -310,6 +310,13 @@ if [[ -d $configDir ]]; then
       update_editor "vim"
       EDITOR_SET=1
     fi
+  elif [[ "$EDITOR_SET" -eq 0 ]] && command -v vscodium &>/dev/null; then
+  	echo -e " :: ${indentInfo} ${indentMagenta}vscodium${indentYellow} is detected as installed.
+	prompt_timer 20 "${indentAction} Do you want to make ${indentMagenta}vscodium${indentGreen} default?"
+	if [[ "$PROMPT_INPUT" == "Y" || "$PROMPT_INPUT == "y" ]]; then
+	  update_editor "vscodium"
+	  EDITOR_SET=1
+	fi
   fi
   while true; do
     prompt_timer 120 "${indentAction} Would you like to switch to fish?"
