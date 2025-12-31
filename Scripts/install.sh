@@ -278,6 +278,7 @@ if [[ -d $configDir ]]; then
     fi
   fi
   tar -xvf "${sourceDir}/Sweet-cursors.tar.xz" -C "${homDir}/.icons" 2>/dev/null 2>&1
+  clear
   if [[ ! -e "${confDir}/gtk-4.0/assets" ]] || [[ ! -e "${confDir}/gtk-4.0/gtk-dark.css" ]] || [[ -L "${confDir}/gtk-4.0/assets" ]] || [[ -L "${confDir}/gtk-4.0/gtk-dark.css" ]]; then
     ln -sf /usr/share/themes/adw-gtk3/assets "${confDir}/gtk-4.0/assets" 2>&1
     ln -sf /usr/share/themes/adw-gtk3/gtk-4.0/gtk-dark.css "${confDir}/gtk-4.0/gtk-dark.css" 2>&1
@@ -286,7 +287,7 @@ if [[ -d $configDir ]]; then
   EDITOR_SET=0
   if command -v nvim &>/dev/null; then
     echo -e " :: ${indentInfo} ${indentMagenta}neovim${indentSkyBlue} is detected as installed"
-    prompt_timer 20 "${indentAction} Do you want to make ${indentMagenta}nvim${indentSkyBlue} default?" 2>&1
+    prompt_timer 20 "${indentAction} Do you want to make ${indentMagenta}neovim${indentSkyBlue} default?" 2>&1
     case $PROMPT_INPUT in
       Y|y)
         update_editor "nvim"
@@ -300,8 +301,8 @@ if [[ -d $configDir ]]; then
         ;;
     esac
   elif [[ "$EDITOR_SET" -eq 0 ]] && command -v vim &>/dev/null; then
-    echo -e " :: ${indentInfo} ${indentMagenta}nano${indentYellow} is detected as installed."
-    prompt_timer 20 "${indentAction} Do you want to make ${indentMagenta}nano${indentReset} default?"
+    echo -e " :: ${indentInfo} ${indentMagenta}vim${indentYellow} is detected as installed."
+    prompt_timer 20 "${indentAction} Do you want to make ${indentMagenta}vim${indentGreen} default?"
     if [[ "$PROMPT_INPUT" == "Y" || "$PROMPT_INPUT" == "y" ]]; then
       update_editor "vim"
       EDITOR_SET=1
@@ -322,7 +323,7 @@ if [[ -d $configDir ]]; then
           echo -e " :: ${indentOk} Changed from $var to ${indentGreen}$var1${indentOrange} is completed!"
           break
         else
-          echo -e " :: ${indentError} Shell change failed? (incorrect passwd?) Try again."
+          echo -e " :: ${indentError} Shell change failed? (incorrect passwd?) Try again - ${exitCode1}"
         fi
         ;;
       N|n)
@@ -345,20 +346,20 @@ if [[ -d $configDir ]]; then
         if git clone --depth 1 "https://${repRp}" "${walDir}"; then
           echo -e " :: ${indentOk} ${indentMagenta}wallpapers${indentReset} cloned successfully!"
         else
-          echo -e " :: ${indentError} Failed to clone ${indentYellow}wallpapers${indentReset}"
+          echo -e " :: ${indentError} Failed to clone ${indentYellow}wallpapers ${exitCode1}"
         fi
         ${localDir}/color-cache.sh
         echo -e " :: ${indentOk} ${indentOrange}wallpapers${indentGreen} has been cached by ${localDir}/color-cache.sh"
         break
         ;;
       N|n)
-	      mkdir -p "${walDir}"
+	    mkdir -p "${walDir}"
         echo -e " :: ${indentOk} Pulling wallpapers from source."
         if [[ $PROMPT_INPUT = 'N' ]] || [[ $PROMPT_INPUT = 'n' ]]; then
           cp -r ${sourceDir}/assets/*.png "${walDir}" 2>/dev/null || cp -r ${sourceDir}/assets/*.jpg "${walDir}" 2>/dev/null
           echo -e " :: ${indentOk} Some ${indentMagenta}wallpapers${indentReset} copied successfully!"
         else
-          echo -e " :: ${indentError} Failed to copy some ${indentYellow}wallpapers${indentReset}"
+          echo -e " :: ${indentError} Failed to copy some ${indentYellow}wallpapers - ${exitCode1}"
         fi
         ${localDir}/color-cache.sh
         echo -e " :: ${indentOk} ${indentOrange}wallpapers${indentGreen} has been cached by ${localDir}/color-cache.sh"
