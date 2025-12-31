@@ -167,7 +167,7 @@ if [[ $check = "Y" ]] || [[ $check = "y" ]]; then
 
   case "$PROMPT_INPUT" in
     [Yy]*)
-      git clone "https://aur.archlinux.org/${aurRp}.git" "${cloneDir}/${aurRp}"
+      git clone "https://aur.archlinux.org/${aurRp}.git" "${cloneDir}/${aurRp}" 
       var=$(stat -c '%U' "${cloneDir}/${aurRp}")
       var1=$(stat -c '%U' "${cloneDir}/${aurRp}/PKGBUILD")
 
@@ -261,7 +261,7 @@ if [[ -d $configDir ]]; then
     else
       if [[ $(stat -c '%U' ${confDir}) = $USER ]]; then
         echo -e " :: ${indentOk} Populating ${confDir}"
-        ${scrDir}/dircaller.sh --all ${homDir}/
+        ${scrDir}/dircaller.sh --all ${homDir}/ 2>&1
       elif [[ $(stat -c '%u' ${configDir}) -eq 0 ]]; then
         echo -e " :: ${indentError} The directory is owned by ${indentWarning}root!${indentYellow} ${indentWarning}${exitCode1}${indentWarning}!"
         exit 1
@@ -272,21 +272,21 @@ if [[ -d $configDir ]]; then
   if [[ $backupCheck -eq 1 ]]; then
     if [[ $(stat -c '%U' ${confDir}) = $USER ]]; then
       echo -e " :: ${indentOk} Populating ${confDir}"
-      ${scrDir}/dircaller.sh --all ${homDir}/
+      ${scrDir}/dircaller.sh --all ${homDir}/ 2>&1
     elif [[ $(stat -c '%u' ${configDir}) -eq 0 ]]; then
       echo -e " :: ${indentError} The directory is owned by ${indentWarning}root!${indentYellow} ${indentWarning}${exitCode1}${indentWarning}!"
     fi
   fi
-  tar -xvf "${sourceDir}/Sweet-cursors.tar.xz" -C "${homDir}/.icons"
+  tar -xvf "${sourceDir}/Sweet-cursors.tar.xz" -C "${homDir}/.icons" 2>&1
   if [[ ! -e "${confDir}/gtk-4.0/assets" ]] || [[ ! -e "${confDir}/gtk-4.0/gtk-dark.css" ]] || [[ -L "${confDir}/gtk-4.0/assets" ]] || [[ -L "${confDir}/gtk-4.0/gtk-dark.css" ]]; then
     ln -sf /usr/share/themes/adw-gtk3/assets "${confDir}/gtk-4.0/assets" 2>&1
     ln -sf /usr/share/themes/adw-gtk3/gtk-4.0/gtk-dark.css "${confDir}/gtk-4.0/gtk-dark.css" 2>&1
-    echo -e " :: ${indentOk} Symlink initialized."
+    echo -e " :: ${indentOk} GTK Symlink initialized ${indentGreen}."
   fi  
   EDITOR_SET=0
   if command -v nvim &>/dev/null; then
     echo -e " :: ${indentInfo} ${indentMagenta}neovim${indentSkyBlue} is detected as installed"
-    prompt_timer 20 "${indentAction} Do you want to make ${indentMagenta}nvim${indentSkyBlue}." 2>&1
+    prompt_timer 20 "${indentAction} Do you want to make ${indentMagenta}nvim${indentSkyBlue} default?" 2>&1
     case $PROMPT_INPUT in
       Y|y)
         update_editor "nvim"
@@ -301,7 +301,7 @@ if [[ -d $configDir ]]; then
     esac
   elif [[ "$EDITOR_SET" -eq 0 ]] && command -v vim &>/dev/null; then
     echo -e " :: ${indentInfo} ${indentMagenta}nano${indentYellow} is detected as installed."
-    prompt_timer 20 "${indentAction} Do you want to make ${indentMagenta}nano${indentReset}"
+    prompt_timer 20 "${indentAction} Do you want to make ${indentMagenta}nano${indentReset} default?"
     if [[ "$PROMPT_INPUT" == "Y" || "$PROMPT_INPUT" == "y" ]]; then
       update_editor "vim"
       EDITOR_SET=1
@@ -312,7 +312,7 @@ if [[ -d $configDir ]]; then
     Y|y)
       var=$(echo "$SHELL")
       echo -e " :: ${indentNotice} Switching the shell to fish"
-      chsh -s /usr/bin/fish
+      chsh -s /usr/bin/fish 2>&1
       var1=$(echo "$SHELL")
       echo -e " :: ${indentOk} Changed from $var to ${indentGreen}$var1${indentOrange} is completed!"
       ;;
@@ -336,7 +336,6 @@ if [[ -d $configDir ]]; then
         echo -e " :: ${indentOk} ${indentOrange}wallpapers${indentGreen} has been cached by ${localDir}/color-cache.sh"
         break
         ;;
-
       N|n)
         echo -e " :: ${indentOk} Pulling wallpapers from source."
         if cp -r ${sourceDir}/assets/*.png "${walDir}" 2>/dev/null || cp -r ${sourceDir}/assets/*.jpg "${walDir}" 2>/dev/null; then
