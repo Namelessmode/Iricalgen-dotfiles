@@ -240,11 +240,9 @@ if [[ $check = "Y" ]] || [[ $check = "y" ]]; then
           echo -e " :: ${indentAction} Proeeding installation due to User's request."
           ${pkgsRp} --extra
           echo -e " :: ${indentOk} All extra packages were ${indentGreen}installed${indentGreen}"
-          break
           ;;
         [Nn]|*)
           echo -e " :: ${indentAction} Avorting installation due to User Preferences."
-          break
           ;;
       esac
       prompt_timer 120 "${indentNotice} Would you also like to get driver packages? [Intel Only]"
