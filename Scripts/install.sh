@@ -33,7 +33,9 @@ case $command in
     mkdir -p "${cloneDir}"
     curl "https://mirror.cachyos.org/${cachyRp}" -o "${cloneDir}/${cachyRp}"
     tar xvf "${cloneDir}/${cachyRp}" -C "${cloneDir}"
+	clear
     (cd "${cloneDir}/cachyos-repo" && sudo ./cachyos-repo.sh)
+	clear
     echo " :: ${indentOk} Repository has been ${indentGreen}installed${indentGreen} successfully. ${exitCode0}"
     exit 0
     ;;
@@ -41,7 +43,9 @@ case $command in
   	if pkg_installed "yay-bin" 2>/dev/null; then
 	  echo -e " :: ${indentAction} ${aurRp} is already ${indentGreen} installed - ${exitCode0}"
 	else
-	  git clone "https://aur.archlinux.org/${aurRp}.git" "${cloneDir}/${aurRp}" 
+	  clear
+	  git clone "https://aur.archlinux.org/${aurRp}.git" "${cloneDir}/${aurRp}" >/dev/null 2>&1
+	  clear
       var=$(stat -c '%U' "${cloneDir}/${aurRp}")
       var1=$(stat -c '%U' "${cloneDir}/${aurRp}/PKGBUILD")
 
@@ -97,7 +101,9 @@ if [[ "${check}" = "Y" ]] || [[ ${check} = "y" ]]; then
           case $PROMPT_INPUT in
             y|Y)
               if [[ -e "${cloneDir}/cachyos-repo/cachyos-repo.sh" ]]; then
+			  	clear
                 (cd "${cloneDir}/cachyos-repo" && sudo ./cachyos-repo.sh)
+				clear
                 break
               else
                 echo "${indentError} !!! Something went ${indentWarning}wrong${indentWarning} in our side..."
@@ -137,7 +143,9 @@ if [[ "${check}" = "Y" ]] || [[ ${check} = "y" ]]; then
 		  mkdir -p "${cloneDir}"
           curl "https://mirror.cachyos.org/${cachyRp}" -o "${cloneDir}/${cachyRp}" 2>/dev/null  2>&1
           tar xvf "${cloneDir}/${cachyRp}" -C "${cloneDir}" >/dev/null 2>&1
+		  clear
           (cd "${cloneDir}/cachyos-repo/" && sudo ./cachyos-repo.sh)
+		  clear
           echo " :: ${indentOk} Repository has been ${indentGreen}installed${indentGreen} successfully. ${exitCode0}"
           break
           ;;
@@ -157,7 +165,9 @@ if [[ "$rpcachecheck" -eq 1 ]]; then
       mkdir -p "${cloneDir}"
       curl "https://mirror.cachyos.org/${cachyRp}" -o "${cloneDir}/${cachyRp}" 2>/dev/null  2>&1
       tar xvf "${cloneDir}/${cachyRp}" -C "${cloneDir}" >/dev/null 2>&1
+	  clear
       (cd "${cloneDir}/cachyos-repo/" && sudo ./cachyos-repo.sh)
+	  clear
       echo " :: ${indentOk} Repository has been ${indentGreen}installed${indentGreen} successfully. ${exitCode0}"
       break
       ;;
@@ -189,7 +199,9 @@ if [[ -d "${cloneDir}/${aurRp}" ]]; then
         case $PROMPT_INPUT in
           Y|y)
             if [[ -e "${cloneDir}/${aurRp}/PKGBUILD" ]]; then
+		      clear
               (cd "${cloneDir}/${aurRp}/" && makepkg -si)
+			  clear
               break
             else
               echo "${indentWarning} !!! Something went ${indentWarning}wrong${indentWarning} in our side..."
@@ -228,12 +240,14 @@ else
 
     case "$PROMPT_INPUT" in
       [Yy]*)
-        git clone "https://aur.archlinux.org/${aurRp}.git" "${cloneDir}/${aurRp}" 
+        git clone "https://aur.archlinux.org/${aurRp}.git" "${cloneDir}/${aurRp}" >/dev/null 2>&1
         var=$(stat -c '%U' "${cloneDir}/${aurRp}")
         var1=$(stat -c '%U' "${cloneDir}/${aurRp}/PKGBUILD")
 
         if [[ $var = "$USER" ]] && [[ $var1 = "$USER" ]]; then
+		  clear
           (cd "${cloneDir}/${aurRp}/" && makepkg -si)
+		  clear
         fi
         ;;
       [Nn]*|""|*)
@@ -252,12 +266,14 @@ if [[ "$rpcachecheck" -eq 1 ]]; then
   prompt_timer 120 "${indentAction} Would you like to install yay?"
   case "$PROMPT_INPUT" in
     [Yy]*)
-      git clone "https://aur.archlinux.org/${aurRp}.git" "${cloneDir}/${aurRp}" 
+      git clone "https://aur.archlinux.org/${aurRp}.git" "${cloneDir}/${aurRp}" >/dev/null 2>&1
       var=$(stat -c '%U' "${cloneDir}/${aurRp}")
       var1=$(stat -c '%U' "${cloneDir}/${aurRp}/PKGBUILD")
 
       if [[ $var = "$USER" ]] && [[ $var1 = "$USER" ]]; then
+	  	clear
         (cd "${cloneDir}/${aurRp}/" && makepkg -si)
+		clear
       fi
       ;;
     [Nn]*|""|*)
@@ -364,7 +380,7 @@ if [[ -d $configDir ]]; then
       echo -e " :: ${indentError} The directory is owned by ${indentWarning}root!${indentYellow} ${indentWarning}${exitCode1}${indentWarning}!"
     fi
   fi
-  tar -xvf "${sourceDir}/Sweet-cursors.tar.xz" -C "${homDir}/.icons" 2>/dev/null 2>&1
+  tar -xvf "${sourceDir}/Sweet-cursors.tar.xz" -C "${homDir}/.icons" >/dev/null 2>&1
   clear
   if [[ ! -e "${confDir}/gtk-4.0/assets" ]] || [[ ! -e "${confDir}/gtk-4.0/gtk-dark.css" ]] || [[ -L "${confDir}/gtk-4.0/assets" ]] || [[ -L "${confDir}/gtk-4.0/gtk-dark.css" ]]; then
     ln -sf /usr/share/themes/adw-gtk3/assets "${confDir}/gtk-4.0/assets" 2>&1
@@ -444,7 +460,9 @@ if [[ -d $configDir ]]; then
         Y|y)
           set +e
           echo -e " :: ${indentNotice} Switching the shell to fish"
+		  clear
           chsh -s /usr/bin/fish 2>&1
+		  clear
           exitstatus=$?
           var1=$(getent passwd "$USER" | cut -d: -f7)
 
@@ -473,7 +491,7 @@ if [[ -d $configDir ]]; then
         echo -e " :: ${indentAction} Proceeding pulling repository due to User's repository."
         mkdir -p "${walDir}"
       
-        if git clone --depth 1 "https://${repRp}" "${walDir}"; then
+        if git clone --depth 1 "https://${repRp}" "${walDir}" >/dev/null 2>&1; then
           echo -e " :: ${indentOk} ${indentMagenta}wallpapers${indentReset} cloned successfully!"
         else
           echo -e " :: ${indentError} Failed to clone ${indentYellow}wallpapers ${exitCode1}"
@@ -501,7 +519,7 @@ if [[ -d $configDir ]]; then
     esac
   done
   xdg-user-dirs-update 2>&1
-  sudo systemctl start sddm 2>&1
+  sudo systemctl enable sddm 2>&1
   echo -e " :: This repository has been installed on the system!"
   read -p "$(echo -e " :: ${indentAction} It is not recommended to use newly installed or upgraded repository without rebooting the system. ${indentSkyBlue} Would you like to reboot? ${indentGreen}(yes/no): ")" answer
   case $answer in
