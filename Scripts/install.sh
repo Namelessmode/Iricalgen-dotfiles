@@ -225,6 +225,7 @@ else
 fi
 
 if [[ $check = "Y" ]] || [[ $check = "y" ]]; then
+  sudo pacman -Syu --needed >/dev/null 2>&1
   while true; do
     if [[ -e "${pkgsRp}" ]]; then
       if [[ $(stat -c '%U' ${pkgsRp}) = $USER ]]; then
