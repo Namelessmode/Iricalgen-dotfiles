@@ -249,13 +249,13 @@ if [[ $check = "Y" ]] || [[ $check = "y" ]]; then
       esac
       prompt_timer 120 "${indentNotice} Would you also like to get driver packages? [Intel Only]"
       case "$PROMPT_INPUT" in
-        [Yy]*)
+        [Yy]|Yes|yes)
           echo -e " :: ${indentAction} Proceeding installation due to User's request."
           ${pkgsRp} --driver
           echo -e " :: ${indentAction} All driver packages were ${indentGreen}installed${indentGreen}"
           break
           ;;
-        [Nn]|*)
+        [Nn]|No|no)
           echo -e " :: ${indentReset} Avorting installation due to User Preferences."
           break
           ;;
@@ -353,7 +353,7 @@ if [[ -d $configDir ]]; then
   fi
     if pkg_installed "cava" &>/dev/null; then
     mkdir -p "${confDir}/cava"
-    cp "${localDir}/../state/cava.ivy" "${confDir}/ivy-shell/shell/"    
+    cp "${localDir}/../state/ivy-shell/cava.ivy" "${confDir}/ivy-shell/shell/"    
   fi
   if pkg_installed "vscodium" &>/dev/null; then
     mkdir -p "${homDir}/.vscode-oss"
@@ -381,11 +381,11 @@ if [[ -d $configDir ]]; then
   "workbench.sideBar.location": "right"
 }
     " > "${confDir}/VSCodium/User/settings.json"
-    cp "${localDir}/../state/code.ivy" "${confDir}/ivy-shell/shell"
+    cp "${localDir}/../state/ivy-shell/code.ivy" "${confDir}/ivy-shell/shell"
   fi
   if pkg_installed "vesktop" &>/dev/null; then
     mkdir -p "${confDir}/vesktop/themes"
-    cp "${localDir}/../state/discord.ivy" "${confDir}/ivy-shell/shell/"
+    cp "${localDir}/../state/ivy-shell/discord.ivy" "${confDir}/ivy-shell/shell/"
   fi
   while true; do
     prompt_timer 120 "${indentAction} Would you like to switch to fish?"
