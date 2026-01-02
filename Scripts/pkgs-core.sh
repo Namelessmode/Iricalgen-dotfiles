@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 hyprland=( 
   base
@@ -105,9 +106,15 @@ driver=(
   vulkan-headers
 )
 
+sddm=(
+  qt6-svg
+  qt6-virtualkeyboard
+  qt6-multimedia-ffmpeg
+)
+
 scrDir="$(dirname "$(realpath "$0")")"
 source "$scrDir/globalfunction.sh"
-var="$1"
+var="${1:-}"
  
 case $var in
   --hyprland)
@@ -119,7 +126,11 @@ case $var in
   --driver)
     install_package "${driver[@]}"
     ;;
+  --sddm)
+    install_package "${driver[@]}"
+    ;;
   *|"")
     exit 0
     ;;
 esac
+
