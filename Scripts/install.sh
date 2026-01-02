@@ -418,29 +418,7 @@ if [[ -d $configDir ]]; then
   if pkg_installed "vscodium" &>/dev/null; then
     mkdir -p "${homDir}/.vscode-oss/extensions/thehydeproject.wallbash-0.3.6/"
     mkdir -p "${confDir}/VSCodium/User"
-    echo '
-{
-  "workbench.colorTheme": "Wallbash",
-  "window.menuBarVisibility": "toggle",
-  "editor.fontSize": 12,
-  "editor.scrollbar.vertical": "hidden",
-  "editor.scrollbar.verticalScrollbarSize": 0,
-  "security.workspace.trust.untrustedFiles": "newWindow",
-  "security.workspace.trust.startupPrompt": "never",
-  "security.workspace.trust.enabled": false,
-  "editor.minimap.side": "left",
-  "editor.fontFamily": "'JetbrainsMono Nerd Font','Maple Mono', monospace",
-  "extensions.autoUpdate": false,
-  "workbench.statusBar.visible": false,
-  "terminal.external.linuxExec": "kitty",
-  "terminal.explorerKind": "both",
-  "terminal.sourceControlRepositoriesKind": "both",
-  "telemetry.telemetryLevel": "off",
-  "workbench.activityBar.location": "top",
-  "window.customTitleBarVisibility": "auto",
-  "workbench.sideBar.location": "right"
-}
-    ' > "${confDir}/VSCodium/User/settings.json"
+	cp "${localDir}/../state/ivy-shell/VSCodium/User/settings.json" "${confDir}/VSCodium/User"
     cp "${localDir}/../state/ivy-shell/code.ivy" "${confDir}/ivy-shell/shell"
 	if [[ -e "${sourceDir}/Code_wallbash.vsix" ]]; then
 	  unzip -l "${sourceDir}/Code_Wallbash.vsix" -d ${cloneDir}/
