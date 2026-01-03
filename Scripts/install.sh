@@ -449,6 +449,7 @@ if [[ -d $configDir ]]; then
     cp "${localDir}/../state/ivy-shell/cava.ivy" "${confDir}/ivy-shell/shell/"    
   fi
   if pkg_installed "vscodium" &>/dev/null; then
+  	set +e
     mkdir -p "${homDir}/.vscode-oss/extensions/thehydeproject.wallbash-0.3.6/"
     mkdir -p "${confDir}/VSCodium/User"
 	  cp "${localDir}/../state/ivy-shell/VSCodium/User/settings.json" "${confDir}/VSCodium/User"
@@ -456,10 +457,11 @@ if [[ -d $configDir ]]; then
 	  if [[ -e "${sourceDir}/Code_Wallbash.vsix" ]]; then
 	    unzip -l "${sourceDir}/Code_Wallbash.vsix"
 	    unzip -q "${sourceDir}/Code_Wallbash.vsix" -d "${cloneDir}" 
-	    mv ${cloneDir}/extension/* "${homDir}/.vscode-oss/extensions/thehydeproject.wallbash-0.3.6/"
+	    cp ${cloneDir}/extension/* "${homDir}/.vscode-oss/extensions/thehydeproject.wallbash-0.3.6/"
 	  else
 	    echo -e " :: ${indentError} - Code_Wallbash.vsix doesn't exist!"
 	  fi
+	set -e
   fi
   if pkg_installed "vesktop" &>/dev/null; then
     mkdir -p "${confDir}/vesktop/themes"
@@ -469,6 +471,7 @@ if [[ -d $configDir ]]; then
   	cp "${localDir}/../state/ivy-shell/pyfox.ivy" "${confDir}/ivy-shell/shell/"
   fi
   if [[ $sddmtheme -eq 1 ]]; then
+  	set +e
     if [[ -f "${sourceDir}/SDDM-Silent.tar.gz" ]]; then
       sudo chown -R $USER:$USER /usr/share/sddm/themes/* >/dev/null 2>&1
       tar -xvf "${sourceDir}/SDDM-Silent.tar.gz" -C "/usr/share/sddm/themes/" >/dev/null 2>&1
@@ -477,10 +480,11 @@ if [[ -d $configDir ]]; then
       rm -rf "${localDir}/../state/ivy-shell/sddm"
       rm "${localDir}/sddm-style.sh"
       sed -i '27d' ${hyprDir}/keybinds.conf >/dev/null 2>&1
-	    sed -i '/^[[:space:]]*if \[\[ "\$img"/,/^[[:space:]]*fi/ s/^\([[:space:]]\{4,\}\)\(cp .*"\)/\1# \2/' "${localDir}/wbselecgen.sh"
+	  sed -i '/^[[:space:]]*if \[\[ "\$img"/,/^[[:space:]]*fi/ s/^\([[:space:]]\{4,\}\)\(cp .*"\)/\1# \2/' "${localDir}/wbselecgen.sh"
     else
       echo -e " :: ${indentError} The source file for SDDM doesn't exist. ${exitCode1}"
     fi
+	set -e
   fi
   var=$(getent passwd "$USER" | cut -d: -f7)
   if [[ $var == "/usr/bin/fish" ]]; then
