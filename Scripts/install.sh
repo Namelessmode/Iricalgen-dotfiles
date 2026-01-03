@@ -452,11 +452,11 @@ if [[ -d $configDir ]]; then
     mkdir -p "${homDir}/.vscode-oss/extensions/thehydeproject.wallbash-0.3.6/"
     mkdir -p "${confDir}/VSCodium/User"
 	  cp "${localDir}/../state/ivy-shell/VSCodium/User/settings.json" "${confDir}/VSCodium/User"
-    cp "${localDir}/../state/ivy-shell/code.ivy" "${confDir}/ivy-shell/shell"
+      cp "${localDir}/../state/ivy-shell/code.ivy" "${confDir}/ivy-shell/shell"
 	  if [[ -e "${sourceDir}/Code_wallbash.vsix" ]]; then
 	    unzip -l "${sourceDir}/Code_Wallbash.vsix"
 	    unzip -q "${sourceDir}/Code_Wallbash.vsix" -d "${cloneDir}" 
-	    mv "${cloneDir}/extension/*" "${homDir}/.vscode-oss/extensions/thehydeproject.wallbash-0.3.6/"
+	    mv ${cloneDir}/extension/* "${homDir}/.vscode-oss/extensions/thehydeproject.wallbash-0.3.6/"
 	  else
 	    echo -e " :: ${indentError} - Code_Wallbash.vsix doesn't exist!"
 	  fi
