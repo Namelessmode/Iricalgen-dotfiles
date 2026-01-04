@@ -186,9 +186,9 @@ if [[ "$rpcachecheck" -eq 1 ]]; then
       mkdir -p "${cloneDir}"
       curl "https://mirror.cachyos.org/${cachyRp}" -o "${cloneDir}/${cachyRp}" 2>/dev/null  2>&1
       tar xvf "${cloneDir}/${cachyRp}" -C "${cloneDir}" >/dev/null 2>&1
-	  clear
+	    clear
       (cd "${cloneDir}/cachyos-repo/" && sudo ./cachyos-repo.sh)
-	  clear
+	    clear
       echo " :: ${indentOk} Repository has been ${indentGreen}installed${indentGreen} successfully. ${exitCode0}"
       ;;
     n|N|""|*)
@@ -290,9 +290,9 @@ if [[ "$rpcachecheck" -eq 1 ]]; then
       var1=$(stat -c '%U' "${cloneDir}/${aurRp}/PKGBUILD")
 
       if [[ $var = "$USER" ]] && [[ $var1 = "$USER" ]]; then
-	  	clear
+	  	  clear
         (cd "${cloneDir}/${aurRp}/" && makepkg -si)
-		clear
+		    clear
       fi
       ;;
     [Nn]*|""|*)
@@ -313,7 +313,7 @@ if [[ $check = "Y" ]] || [[ $check = "y" ]]; then
         echo -e " :: ${indentOk} All hyprland packages were ${indentGreen}installed${indentGreen}."
       elif [[ $(stat -c '%u' ${pkgsRp}) -eq 0 ]]; then
         echo " :: ${indentError} The shell script has ${indentWarning}root ownership!!! ${indentWarning}${exitCode1}${indentWarning}"
-       exit 1
+        exit 1
       fi
       prompt_timer 120 "${indentNotice} Would you like to get additional packages?"
       case "$PROMPT_INPUT" in
@@ -337,7 +337,7 @@ if [[ $check = "Y" ]] || [[ $check = "y" ]]; then
           echo -e " :: ${indentReset} Avorting installation due to User Preferences."
           ;;
       esac
-	  sddmtheme=0
+	    sddmtheme=0
       prompt_timer 120 "${indentInfo} Would you like to get SDDM Theme?"
       case "$PROMPT_INPUT" in
         [Yy]*)
@@ -453,7 +453,7 @@ if [[ -d $configDir ]]; then
     mkdir -p "${homDir}/.vscode-oss/extensions/thehydeproject.wallbash-0.3.6/"
     mkdir -p "${confDir}/VSCodium/User"
 	  cp "${localDir}/../state/ivy-shell/VSCodium/User/settings.json" "${confDir}/VSCodium/User"
-      cp "${localDir}/../state/ivy-shell/code.ivy" "${confDir}/ivy-shell/shell"
+    cp "${localDir}/../state/ivy-shell/code.ivy" "${confDir}/ivy-shell/shell"
 	  if [[ -e "${sourceDir}/Code_Wallbash.vsix" ]]; then
 	    unzip -l "${sourceDir}/Code_Wallbash.vsix"
 	    unzip -q "${sourceDir}/Code_Wallbash.vsix" -d "${cloneDir}" 
@@ -471,18 +471,21 @@ if [[ -d $configDir ]]; then
   	cp "${localDir}/../state/ivy-shell/pyfox.ivy" "${confDir}/ivy-shell/shell/"
   fi
   if [[ $sddmtheme -eq 1 ]]; then
-  	set +e
     if [[ -f "${sourceDir}/SDDM-Silent.tar.gz" ]]; then
+      echo -e " :: Populating ${indentMagenta} SDDM to /usr/share due to user request"
+      sleep 1
       sudo chown -R $USER:$USER /usr/share/sddm/themes/* >/dev/null 2>&1
-      tar -xvf "${sourceDir}/SDDM-Silent.tar.gz" -C "/usr/share/sddm/themes/" >/dev/null 2>&1
+      tar -xvf "${sourceDir}/SDDM-Silent.tar.gz" -C "${cloneDir}/"
+      sudo cp "${cloneDir}/silent" "/usr/share/sddm/themes/"
       sudo cp "${localDir}/../state/ivy-shell/sddm/sddm.conf" "/etc/sddm.conf" 2>&1
+      if [[ $? -eq 1 ]]; then
+        echo " :: Something went wrong while populating SDDM Theme. ${exitCode1}"
+      fi
     elif [[ $sddmtheme -eq 0 ]]; then
       rm -rf "${localDir}/../state/ivy-shell/sddm"
       rm "${localDir}/sddm-style.sh"
       sed -i '27d' ${hyprDir}/keybinds.conf >/dev/null 2>&1
-	  sed -i '/^[[:space:]]*if \[\[ "\$img"/,/^[[:space:]]*fi/ s/^\([[:space:]]\{4,\}\)\(cp .*"\)/\1# \2/' "${localDir}/wbselecgen.sh"
-    else
-      echo -e " :: ${indentError} The source file for SDDM doesn't exist. ${exitCode1}"
+	    sed -i '/^[[:space:]]*if \[\[ "\$img"/,/^[[:space:]]*fi/ s/^\([[:space:]]\{4,\}\)\(cp .*"\)/\1# \2/' "${localDir}/wbselecgen.sh"
     fi
 	set -e
   fi
@@ -496,9 +499,9 @@ if [[ -d $configDir ]]; then
         Y|y)
           set +e
           echo -e " :: ${indentNotice} Switching the shell to fish"
-		  clear
+		      clear
           chsh -s /usr/bin/fish 2>&1
-		  clear
+		      clear
           exitstatus=$?
           var1=$(getent passwd "$USER" | cut -d: -f7)
 
